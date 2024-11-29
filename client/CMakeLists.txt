@@ -1,0 +1,25 @@
+﻿# CMakeList.txt : CMake project for client, include source and define
+# project specific logic here.
+#
+cmake_minimum_required (VERSION 3.8)
+
+# Enable Hot Reload for MSVC compilers if supported.
+if (POLICY CMP0141)
+  cmake_policy(SET CMP0141 NEW)
+  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+endif()
+
+project ("client")
+SET(WINDOWS_RESOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/logo.rc)
+find_package(wxWidgets REQUIRED gl core base OPTIONAL_COMPONENTS net)
+include(${wxWidgets_USE_FILE})
+
+# Add source to this project's executable.
+add_executable(client WIN32 "src/app.cpp" "src/main.cpp" "include/main.h" "include/app.h")
+target_link_libraries(client PRIVATE ${wxWidgets_LIBRARIES})
+
+if (CMAKE_VERSION VERSION_GREATER 3.12)
+  set_property(TARGET client PROPERTY CXX_STANDARD 20)
+endif()
+
+# TODO: Add tests and install targets if needed.
